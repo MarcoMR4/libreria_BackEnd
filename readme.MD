@@ -1,7 +1,9 @@
 ## Recomendaciones. 
 
 . Activar entorno virtual: .\venv\scripts\activate 
+
 . Instalar librerias:    pip install -r requirements.txt
+
 . Base de datos local en archivo db.sqlite3 
 
 ### Endpoints
