@@ -1,18 +1,15 @@
 from rest_framework import viewsets
 from .serializer import UserSerializer, BookSerializer
 from .models import Users, Book
-from django.contrib.auth.models import AbstractUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = Users.objects.all()
     serializer_class = UserSerializer
-
-
 
 
 # Registro de usuarios para tabla users, esta es para crear una url personalizada 
@@ -30,13 +27,11 @@ class UserRegisterView(generics.CreateAPIView):
 
 
 
-
 # Vista con los metodos necesarios para crud en tabla libros con ayuda de serializer
 class BookViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.select_related('users_id').all()
+    queryset = Book.objects.all()
     serializer_class = BookSerializer
-    
-
+    permission_classes = [permissions.IsAuthenticated]
 
 
 # Login de users 
@@ -58,6 +53,7 @@ class TokenObtainView(APIView):
                 'message' : 'Welcome! here is your access token c:',
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
+                'user_id': user.id,
             }
             return Response(data, status=status.HTTP_200_OK)
         else:
